@@ -1,0 +1,21 @@
+{
+  "audit_receipt_id": "receipt-demo-0001",
+  "execution_id": "exec-demo-0001",
+  "request_id": "req-demo-0001",
+  "tenant_id": "municipality-demo",
+  "decision": "ALLOW",
+  "authorized_action": "CREATE_WORK_ITEM",
+  "action_result": {
+    "status": "SUCCESS",
+    "work_item_id": "work-demo-0001"
+  },
+  "governance": {
+    "evidence_status": "SUFFICIENT",
+    "policy_snapshot_id": "policy-snapshot-demo-001",
+    "authority_status": "AUTHORIZED",
+    "approval_state": "NOT_REQUIRED"
+  },
+  "provider_id": "self-hosted-demo",
+  "latency_ms": 842,
+  "timestamp": "2026-10-03T22:30:00+07:00"
+}

@@ -1,0 +1,35 @@
+{
+  "execution_id": "exec-demo-0001",
+  "request_id": "req-demo-0001",
+  "tenant_id": "municipality-demo",
+  "evidence": {
+    "status": "SUFFICIENT",
+    "digest": "sha256:demo-evidence-digest",
+    "source_ids": [
+      "citizen-description",
+      "citizen-location",
+      "citizen-photo"
+    ]
+  },
+  "policy": {
+    "policy_id": "streetlight-maintenance",
+    "policy_snapshot_id": "policy-snapshot-demo-001",
+    "result": "MATCH"
+  },
+  "provider": {
+    "provider_id": "self-hosted-demo",
+    "model": "example-local-model"
+  },
+  "authority": {
+    "action": "CREATE_WORK_ITEM",
+    "status": "AUTHORIZED",
+    "risk_class": "LOW"
+  },
+  "approval": {
+    "required": false,
+    "state": "NOT_REQUIRED"
+  },
+  "decision": "ALLOW",
+  "authorized_action": "CREATE_WORK_ITEM",
+  "reason": "Required evidence is sufficient, applicable policy matched, and the action is within autonomous authority."
+}
