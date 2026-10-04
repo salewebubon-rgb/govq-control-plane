@@ -1,25 +1,38 @@
-# GOVQ
+# GOVQ — Governed AI Control Plane
 
-**AI-native governed execution core for autonomous AI systems.**
+**Governed execution for autonomous AI systems.**
 
-GOVQ is designed to keep organizations in control of what AI can see, decide, and do.
+GOVQ is a governed AI control plane designed to keep organizations in control of what AI can see, decide, and do.
+
+> **LLM proposes. GOVQ authorizes. The application executes.**
+
+---
 
 ## Why GOVQ
 
-Connecting an application to an AI model or API is easy.
+Connecting an application to an AI model is easy.
 
-The harder problem begins when AI is allowed to work with real data, real systems, real users, and real-world actions.
+The harder problem begins when AI is allowed to work with:
 
-Before an AI system is allowed to perform a real action, an organization should be able to answer:
+- real organizational data
+- real users
+- real workflows
+- real tools
+- real operational actions
 
-- What information was sent to the AI?
-- What evidence did the AI rely on?
+Before an AI-assisted action is allowed to proceed, an organization should be able to answer:
+
+- What data was used?
+- What evidence supported the decision?
 - Which policy applied?
-- Was the AI authorized to perform the action?
+- Was the action authorized?
 - Was human approval required?
-- Can the action be audited afterwards?
+- What action occurred?
+- Can the execution be reconstructed afterwards?
 
-GOVQ places these controls directly in the AI execution path.
+GOVQ places these controls directly in the execution path.
+
+---
 
 ## Core Idea
 
@@ -29,85 +42,55 @@ User / Application
         v
     AI / Agent
         |
+        | proposes
         v
       GOVQ
-   /   |   \
-Evidence Policy Authority
-   \   |   /
- Human Approval
         |
-        v
-   Real Action
-        |
-        v
-  Audit Receipt
-```
-
-> GOVQ does not give AI authority.  
-> GOVQ gives organizations authority over AI.
-
-## Execution Principle
-
-GOVQ separates AI reasoning from execution authority.
-
-```text
-LLM / Agent proposes
-        |
-        v
-GOVQ evaluates
-        |
-        +--> Evidence
-        +--> Policy
-        +--> Authority
-        +--> Human Approval
-        +--> Safety / Privacy
-        |
+        | governs
         v
 ALLOW / DENY / REQUIRE APPROVAL
         |
         v
-Authorized application or tool executes
+Authorized Application / Tool
+        |
+        | executes
+        v
+   Real-World Action
         |
         v
-Audit Receipt
+    Audit Receipt
 ```
 
-**LLM proposes. GOVQ authorizes. The application executes.**
+The AI model is not the authority boundary.
+
+GOVQ is the governance boundary.
+
+The application or authorized tool remains the execution boundary.
+
+---
 
 ## Governance Model
 
-GOVQ is designed around six governance controls:
+GOVQ is organized around six primary controls:
 
-1. **Data Control**  
-   Control what information may be exposed to AI and minimize unnecessary data transfer.
+1. **Data Control** — Controls what information may be exposed to AI.
+2. **Evidence Control** — Determines whether supporting information is sufficient and traceable.
+3. **Policy Control** — Binds execution to explicit organizational rules.
+4. **Authority Control** — Determines whether the proposed action is permitted.
+5. **Human Control** — Requires authorized human approval when autonomous authority is insufficient.
+6. **Audit Control** — Makes the execution reconstructable after the action.
 
-2. **Evidence Control**  
-   Determine whether the information supporting an AI decision is sufficient and traceable.
+Detailed governance documentation:
 
-3. **Policy Control**  
-   Bind AI-assisted decisions to explicit organizational policies and rules.
+- [`docs/03-governance-model.md`](docs/03-governance-model.md)
 
-4. **Authority Control**  
-   Determine which actions an AI system is permitted to propose or perform.
+---
 
-5. **Human Control**  
-   Require human approval when an action exceeds autonomous authority or reaches a defined risk threshold.
-
-6. **Audit Control**  
-   Record execution evidence, decisions, approvals, actions, and outcomes so the workflow can be reviewed afterwards.
-
-## Current Architecture
-
-GOVQ is designed as a model-agnostic control plane.
-
-Self-hosted or cloud-hosted models may perform reasoning, classification, extraction, generation, or planning, but real-world execution must pass governance controls before an authorized application or tool is allowed to act.
-
-High-level architecture:
+## Architecture
 
 ```text
-Legacy Website / Application
+Existing Application / E-Service
             |
-            | HTTPS / API
             v
         GOVQ Gateway
             |
@@ -123,240 +106,237 @@ Legacy Website / Application
       Human Approval
             |
             v
-      Inference Layer
+     Inference Layer
    Self-hosted / Cloud
             |
             v
-      Governed Decision
+      AI Proposal
             |
             v
- Authorized Application
-       or Tool Action
+     GOVQ Decision
+            |
+            v
+Authorized Application / Tool
+            |
+            v
+       Real Action
             |
             v
        Audit Receipt
 ```
 
+The inference provider is replaceable. Governance remains independent of the model vendor.
+
+Detailed architecture:
+
+- [`docs/02-architecture.md`](docs/02-architecture.md)
+
+---
+
 ## Legacy Application Integration
 
-GOVQ is intended to work with existing applications without requiring organizations to rebuild their entire system.
-
-A legacy website or standalone E-Service can remain on its existing hosting environment while calling GOVQ through a governed API.
+GOVQ is designed to work with existing applications without forcing organizations to rebuild their entire system.
 
 ```text
-Existing Application A ---\
-Existing Application B ----+----> GOVQ ----> Shared Inference
-Existing Application C ---/
+Existing App A ---\
+Existing App B ----+----> GOVQ ----> Shared Inference
+Existing App C ---/
 ```
 
-Each organization can retain its own:
+Each application or organization can retain its own:
 
 - data
-- domain knowledge
 - policy
+- domain knowledge
 - permissions
-- business logic
 - operational authority
 - audit boundary
 
-The shared governance infrastructure does not imply shared organizational policy.
+Shared infrastructure does not imply shared governance authority.
 
-## Self-Hosted Inference
+---
 
-GOVQ can work with self-hosted language models as well as external model providers.
+## Self-Hosted and Cloud Inference
 
-For deployments where predictable infrastructure cost, data control, and reduced dependency on per-token external API billing are important, a centrally managed self-hosted model can be used as the inference layer.
+GOVQ can work with:
 
-The inference model is not the authority boundary.
+- self-hosted language models
+- private inference services
+- cloud LLM providers
+- future model providers
 
-GOVQ remains responsible for governance decisions around evidence, policy, authorization, approval, and audit.
+Self-hosted inference can provide:
 
-## Trust Through Visible Evidence
+- predictable infrastructure cost
+- centralized model management
+- reduced dependence on per-token external API billing
+- greater control over the inference environment
 
-A successful AI action is not enough.
+The inference model remains a reasoning component. It does not become the governance authority.
 
-Organizations also need to understand and verify:
+---
 
-- why the action was allowed
-- which evidence supported it
-- which policy was applied
-- whether the AI had authority
-- whether a human approved it
-- what action was executed
-- whether the result can be reconstructed later
+## Decision States
 
-GOVQ is designed so that governance evidence can be exposed through a **Cognitive Governance Dashboard**, not only hidden inside technical logs.
-
-## Runtime Proof
-
-The project prioritizes end-to-end runtime evidence rather than architecture diagrams alone.
-
-Qualification and demonstration are expected to cover the complete execution path:
+Reference GOVQ decision states include:
 
 ```text
-Request
-  |
-  v
-Evidence Check
-  |
-  v
-Policy Evaluation
-  |
-  v
-Authority Check
-  |
-  v
-AI Reasoning
-  |
-  v
-Governed Decision
-  |
-  +--> DENY
-  |
-  +--> REQUIRE HUMAN APPROVAL
-  |
-  +--> ALLOW
-          |
-          v
-      Real Action
-          |
-          v
-      Audit Receipt
+ALLOW
+DENY
+REQUIRE_APPROVAL
+INSUFFICIENT_EVIDENCE
 ```
 
-CLI tests and qualification harnesses provide technical evidence.
+These states are governance outcomes, not model opinions.
 
-The Cognitive Governance Dashboard is intended to make the same governed execution understandable to operators, users, and reviewers.
+---
+
+## Fail-Closed and Zero-Bypass
+
+### Fail-Closed
+
+```text
+Uncertain State
+      |
+      v
+Fail Closed
+      |
+      v
+No Protected Action
+```
+
+### Zero-Bypass
+
+Correct:
+
+```text
+AI Proposal
+    |
+    v
+GOVQ
+    |
+    v
+Authorized Tool
+```
+
+Incorrect:
+
+```text
+AI --------> Protected Tool
+```
+
+without the governed execution path.
+
+---
+
+## Visible Governance
+
+The planned **Cognitive Governance Dashboard** is intended to expose runtime information such as:
+
+- execution ID
+- evidence status
+- policy applied
+- authority decision
+- provider/model
+- approval state
+- final decision
+- action result
+- audit receipt
+- latency
+- runtime health
+
+Engineering evidence and operational evidence should refer to the same execution.
+
+---
 
 ## Current Status
 
-- GOVQ Core: Active development
+- GOVQ Core architecture: Active development
 - Governance contracts: Active development and qualification
-- Evidence and policy mechanisms: Available in the current architecture
+- Evidence and policy mechanisms: Available in current architecture
 - Provider abstraction: Available
-- Self-hosted LLM path: Available
-- Cloud LLM path: Optional
+- Self-hosted inference path: Available
+- Cloud inference path: Optional
 - Runtime qualification infrastructure: Active
 - Governed action execution: Under development
 - Human approval workflow: Under development
 - Cognitive Governance Dashboard: Planned
-- Real-world E-Service integration: Planned Hackathon build
+- Municipal E-Service integration: Planned Hackathon build
 
-Status labels in this repository describe the current public project state and should not be interpreted as production certification.
+Status descriptions in this repository represent the current public project state and should not be interpreted as production certification.
+
+---
 
 ## Regional Codex Hackathon
 
-GOVQ is being prepared as an existing technical foundation for a real-world governed AI build.
+GOVQ is being prepared as an existing governed AI foundation for a new real-world autonomous application build.
 
 ### Existing Before the Event
 
-The current project foundation includes:
-
 - GOVQ Core architecture
 - governance contracts
-- evidence mechanisms
-- policy mechanisms
+- evidence and policy mechanisms
 - authorization model
 - audit and provenance model
 - provider abstraction
-- runtime and qualification infrastructure
+- runtime qualification infrastructure
 - self-hosted inference support
-- existing AI application experience including Chat and Kiosk workloads
+- existing Chat and Kiosk AI application experience
 
-### Planned Hackathon Build
-
-The planned significant new build during the Hackathon includes:
+### Planned Significant New Build During the Event
 
 - autonomous municipal E-Service agent
-- real-world workflow adapter
+- workflow adapter
 - governed action integration
+- human approval flow
 - Cognitive Governance Dashboard
-- ALLOW / DENY / HUMAN APPROVAL workflow
 - live execution trace
 - live audit receipt
-- end-to-end production-like demonstration
+- end-to-end runtime demonstration
 
-The goal is not to rebuild GOVQ during the event.
+Hackathon boundary documentation:
 
-The goal is to demonstrate how an existing governed execution core can enable autonomous AI to work with a real-world application safely, visibly, and accountably.
+- [`hackathon/WHAT_EXISTS_BEFORE.md`](hackathon/WHAT_EXISTS_BEFORE.md)
+- [`hackathon/WHAT_WILL_BE_BUILT.md`](hackathon/WHAT_WILL_BE_BUILT.md)
+- [`hackathon/DEMO_SCENARIOS.md`](hackathon/DEMO_SCENARIOS.md)
 
-## Demo Direction
+---
 
-The reference demonstration uses a municipal E-Service workflow.
+## Documentation
 
-Example scenarios:
+- [`docs/01-problem.md`](docs/01-problem.md) — real-world problem definition
+- [`docs/02-architecture.md`](docs/02-architecture.md) — execution architecture
+- [`docs/03-governance-model.md`](docs/03-governance-model.md) — six governance controls
+- [`docs/04-evolution.md`](docs/04-evolution.md) — architectural evolution
 
-### Scenario A — ALLOW
+---
 
-A citizen submits a sufficiently complete service request.
+## Examples
 
-GOVQ verifies the required evidence and policy, confirms that the requested action is within authorized scope, and allows the E-Service application to create the work item.
+- [`examples/sample-request.json`](examples/sample-request.json)
+- [`examples/sample-decision.json`](examples/sample-decision.json)
+- [`examples/sample-receipt.json`](examples/sample-receipt.json)
 
-### Scenario B — INSUFFICIENT EVIDENCE
+These examples are illustrative public contracts and do not expose the private production implementation.
 
-A request is missing required information.
-
-GOVQ blocks execution and requests the missing information instead of allowing the agent to guess or act without sufficient evidence.
-
-### Scenario C — HUMAN APPROVAL
-
-A proposed action exceeds autonomous authority.
-
-GOVQ pauses execution, requires approval from an authorized human operator, and resumes only after the approval decision is recorded.
-
-## Cognitive Governance Dashboard
-
-The dashboard is intended to expose live governed execution using information such as:
-
-- execution ID
-- tenant
-- request or mission
-- evidence status
-- policy applied
-- authority decision
-- model or provider
-- human approval status
-- final decision
-- action result
-- audit receipt
-- latency and runtime health
-
-Its purpose is to make governance observable and understandable, while lower-level CLI and qualification evidence remain available for deeper technical review.
-
-## Design Principles
-
-GOVQ follows several core principles:
-
-- **Governance in the execution path**
-- **Model-agnostic architecture**
-- **Evidence before action**
-- **Explicit authority boundaries**
-- **Human approval where required**
-- **Fail-closed behavior for uncertain execution**
-- **Traceable decisions and actions**
-- **Legacy-system compatibility**
-- **Separation of reasoning from authority**
-- **Reusable governance across multiple applications**
+---
 
 ## Repository Purpose
 
-This public repository is a technical evidence package for GOVQ.
+This repository is a **public technical evidence package** for GOVQ.
 
 It is intended to contain:
 
-- public architecture documentation
-- governance model documentation
-- selected diagrams
-- sample contracts
-- sample requests and decisions
-- qualification summaries
-- selected runtime evidence
+- architecture documentation
+- governance documentation
+- public execution examples
+- selected technical evidence
 - Hackathon build boundaries
-- Hackathon demo scenarios
+- demo scenarios
 
 The production GOVQ Core remains in a private repository.
 
-This repository must not contain:
+This public repository must not contain:
 
 - API keys
 - secrets
@@ -364,29 +344,20 @@ This repository must not contain:
 - private customer information
 - production databases
 - private source code
-- internal vulnerability details
 - sensitive operational configuration
+- internal vulnerability details
 
-## Repository Structure
+---
 
-```text
-govq-public/
-├── README.md
-├── assets/
-├── diagrams/
-├── docs/
-├── evidence/
-├── examples/
-└── hackathon/
-```
+## Public Repository Boundary
 
-## Development Boundary
+This repository documents GOVQ engineering architecture and selected public evidence.
 
-The public repository documents the architecture and selected technical evidence.
+It does not publish the complete private GOVQ implementation.
 
-Private production implementation remains separate.
+The public boundary exists to demonstrate technical direction, architecture, execution contracts, and selected evidence while protecting sensitive implementation details and operational data.
 
-This separation allows GOVQ to demonstrate technical maturity and runtime evidence without exposing sensitive implementation details, customer information, or production credentials.
+---
 
 ## Project Direction
 
@@ -395,3 +366,5 @@ GOVQ is being developed as a reusable governed AI control plane for applications
 The long-term direction is to support AI systems that can reason and act while keeping organizations in control of:
 
 **data, evidence, policy, authority, approval, execution, and accountability.**
+
+> **AI may reason. GOVQ governs. The organization remains in control.**
